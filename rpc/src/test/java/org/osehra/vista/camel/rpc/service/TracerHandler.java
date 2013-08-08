@@ -16,6 +16,7 @@
 
 package org.osehra.vista.camel.rpc.service;
 
+
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -28,8 +29,6 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 
-import org.osehra.vista.camel.rpc.RpcConstants;
-import org.osehra.vista.camel.rpc.codec.RpcCodecUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -17,9 +17,6 @@
 package org.osehra.vista.camel.rpc.codec;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -59,20 +56,6 @@ public class RpcCodecUtilsTest {
             Assert.assertEquals("005dummy", out.readBytes(value.length() + len).toString(RpcCodecUtils.DEF_CHARSET));
         } catch (UnsupportedEncodingException e) {
             Assert.fail("String encoding failed " + e);
-        }
-    }
-
-    @Test
-    public void testCiaLengthEncoding() {
-        int[] values = { 10, 100, 1000, 10000, 100000, 1000000 };
-        for (int value : values) {
-            ChannelBuffer b = ChannelBuffers.dynamicBuffer();
-            // byte[] encoded = RpcCodecUtils.encodeLen(value);
-            // b.writeBytes(encoded);
-    
-            // Assert.assertTrue(b.writerIndex() > 0);
-            // byte len = b.readByte();
-            // Assert.assertEquals(value, CiaCodecUtils.decodeLen(b, len));
         }
     }
 

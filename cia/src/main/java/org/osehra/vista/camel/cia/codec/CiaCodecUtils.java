@@ -16,28 +16,21 @@
 
 package org.osehra.vista.camel.cia.codec;
 
-import java.io.ByteArrayOutputStream;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.handler.codec.frame.CorruptedFrameException;
-
 import org.osehra.vista.camel.cia.CiaRequest;
 import org.osehra.vista.camel.rpc.codec.RpcCodecUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public final class CiaCodecUtils {
-    private static final Logger LOG = LoggerFactory.getLogger(CiaCodecUtils.class);
     public static final Charset DEF_CHARSET = Charset.forName("UTF-8");
     public static final byte EOD = (byte)0xff;
     private static byte sequence = 0;
@@ -67,6 +60,7 @@ public final class CiaCodecUtils {
 
 
     public static byte nextSequenceIndex(byte current) {
+        // when the current index wraps around one byte (256), reset it to '1'
         return (byte)(++current == 0 ? 1 : current);
     }
 

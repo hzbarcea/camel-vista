@@ -17,30 +17,27 @@
 package org.osehra.vista.camel.cia.codec;
 
 
-import org.osehra.vista.camel.cia.CiaRequest;
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 
-public class CiaCommandsSupport {
+public class CiaCodecUtilsTest {
 
-    public static CiaRequest connect() {
-        // TODO: use computed vs hardcoded defaults
-        return connect("NOTVALID");
-    }
-    public static CiaRequest connect(String ipaddress) {
-        return request()
-            .type('C')
-            .parameter("IP", ipaddress)
-            .parameter("UCI", "")
-            .parameter("DBG", "0")
-            .parameter("LP", "0")
-            .parameter("VER", "1.6.5.26");
-    }
-
-    public static CiaRequest request() {
-        return new CiaRequest().type('R');
-    }
-
-    private CiaCommandsSupport() {
+    @Test
+    public void testCiaLengthEncoding() {
+        int[] values = { 10, 100, 1000, 10000, 100000, 1000000 };
+        for (int value : values) {
+            ChannelBuffer b = ChannelBuffers.dynamicBuffer();
+            byte[] encoded = CiaCodecUtils.encodeLen(value);
+            b.writeBytes(encoded);
+    
+            Assert.assertTrue(b.writerIndex() > 0);
+            byte len = b.readByte();
+            Assert.assertEquals(value, CiaCodecUtils.decodeLen(b, len));
+        }
     }
 
 }
