@@ -26,10 +26,35 @@ import org.jboss.netty.logging.Slf4JLoggerFactory;
 import org.osehra.vista.camel.rpc.codec.RpcServerPipelineFactory;
 
 
-public class VistaServerMain extends VistaServerSupport {
+public class VistaServer extends VistaServerSupport {
+    public static final int DEFAULT_PORT = 9220;
+    private int port = DEFAULT_PORT;
+
+    private static String usage() {
+        return "usage: java VistaServer [port]\n";
+    }
 
     public static void main(String... args) {
-        new VistaServerMain().run();
+        int port = DEFAULT_PORT;
+        if (args.length > 0) {
+            int p = 0;
+            String a = args[0];
+            if ("--help".equals(a) || args.length > 1) {
+                // will print the help message and exit
+            } else {
+                try {
+                    p = Integer.parseInt(a);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid port value: " + a);
+                }
+            }
+            if (p == 0) {
+                System.out.println(usage());
+                return;
+            }
+            port = p;
+        }
+        new VistaServer().setPort(port).run();
     }
 
     @Override
@@ -42,6 +67,11 @@ public class VistaServerMain extends VistaServerSupport {
             LOG.error("Failed to start RPC server", e);
             throw new RuntimeException("Failed to start RPC server", e);
         }
+    }
+    
+    public VistaServer setPort (int port) {
+        this.port = port;
+        return this;
     }
 
     protected void startRpcListener() throws Exception {
@@ -56,9 +86,9 @@ public class VistaServerMain extends VistaServerSupport {
         bootstrap.setOption("child.tcpNoDelay", true);
         bootstrap.setOption("child.keepAlive", true);
 
-        // Bind and start to accept incoming connections.
-        // TODO: make port configurable
-        bootstrap.bind(new InetSocketAddress(9220));
+        // Start listener to accept incoming connections.
+        LOG.info("VistA RPC Broker starting on port {}", port);
+        bootstrap.bind(new InetSocketAddress(port));
     }
 
 }

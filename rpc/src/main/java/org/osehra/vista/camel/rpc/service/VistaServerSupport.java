@@ -96,16 +96,16 @@ public abstract class VistaServerSupport extends VistaServiceSupport implements 
      * A class for intercepting the hang up signal and do a graceful shutdown
      */
     private static final class HangupInterceptor extends Thread {
-        VistaService server;
+        VistaServerSupport server;
 
-        public HangupInterceptor(VistaService server) {
+        public HangupInterceptor(VistaServerSupport server) {
             this.server = server;
         }
 
         @Override
         public void run() {
-            LOG.info("Hangup triggered - stopping server");
-            server.stop();
+            LOG.debug("Hangup triggered - stopping server");
+            server.completed();
         }
     }
 
