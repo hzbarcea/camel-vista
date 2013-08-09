@@ -48,6 +48,11 @@ public abstract class VistaServerSupport extends VistaServiceSupport implements 
         }
     }
 
+    @Override
+    protected boolean isRestartable() {
+        return true;
+    }
+
     public void run() {
         if (!completed.get()) {
             // if we have an issue starting then propagate the exception to caller

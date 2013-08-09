@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Assert;
 import org.junit.Test;
 
-
+// TODO: add more tests for startup failure scenarios and service restart
 public class ServiceLifecycleTest {
     private static final int THREADS = 3;
     private static final int WORKERS = 7;
@@ -98,14 +98,19 @@ public class ServiceLifecycleTest {
             this.executionCount = count;
         }
 
+        @Override
         protected void startInternal() throws RuntimeException {
             toggleState();
         }
-
+        @Override
         protected void stopInternal() throws RuntimeException {
             toggleState();
         }
-        
+        @Override
+        protected boolean isRestartable() {
+            return true;
+        }
+
         private void toggleState() {
             try {
                 // let threads catch up
@@ -115,5 +120,6 @@ public class ServiceLifecycleTest {
             executionCount.incrementAndGet();
         }
     }
+
 }
 

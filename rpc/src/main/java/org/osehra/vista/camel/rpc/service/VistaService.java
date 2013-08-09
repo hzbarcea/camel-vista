@@ -19,8 +19,8 @@ package org.osehra.vista.camel.rpc.service;
 
 public interface VistaService {
 
-    void start();
-    void stop();
+    boolean start();
+    boolean stop();
     boolean isActive();
 
 }
