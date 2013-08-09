@@ -16,48 +16,63 @@
 
 package org.osehra.vista.camel.rpc.service;
 
-import java.util.concurrent.atomic.AtomicInteger;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public abstract class VistaServiceSupport implements VistaService {
-    // by convention:
-    // IDLE == 0, STARTING = 1, ACTIVE = 2, STOPPING = 3
-    private AtomicInteger state = new AtomicInteger(0);
+
+    private AtomicBoolean active = new AtomicBoolean(false);
+    private AtomicBoolean starting = new AtomicBoolean(false);
+    private CountDownLatch started = new CountDownLatch(1);
+    private AtomicBoolean stopping = new AtomicBoolean(false);
+    private CountDownLatch stopped = new CountDownLatch(1);
 
     public void start() {
-        if (getState() == STATE.IDLE) {
-            state.set(1); // starting
-            try {
-                startInternal();
-            } catch (RuntimeException ex) {
-                state.set(0); // back to idle
-                return;
+        while (!active.get()) {
+            if (starting.compareAndSet(false, true)) {
+                try {
+                    startInternal();
+                    active.set(true);
+                    started.countDown();
+                    stopped = new CountDownLatch(1);
+                } catch (RuntimeException ex) {     // ignore; starting flag is reset regardless
+                }
+                starting.set(false);
+            } else {
+                try {
+                    started.await();
+                } catch (InterruptedException e) {  // ignore
+                }
             }
-            state.set(2);
         }
     }
 
     public void stop() {
-        if (getState() == STATE.ACTIVE) {
-            state.set(3); // stopping
-            try {
-                stopInternal();
-            } catch (RuntimeException ex) {
-                // LOG
+        while (active.get()) {
+            if (stopping.compareAndSet(false, true)) {
+                try {
+                    stopInternal();
+                    active.set(false);
+                    stopped.countDown();
+                    started = new CountDownLatch(1);
+                } catch (RuntimeException ex) {
+                }
+                stopping.set(false);
+            } else {
+                try {
+                    stopped.await();
+                } catch (InterruptedException e) {
+                }
             }
-            state.set(0);
         }
     }
 
-    public STATE getState() {
-        switch (state.get()) {
-        case 1: return STATE.STARTING;
-        case 2: return STATE.ACTIVE;
-        case 3: return STATE.STOPPING;
-        }
-        return STATE.IDLE;
+    public boolean isActive() {
+        return active.get();
     }
-    
+
     protected abstract void startInternal() throws RuntimeException;
     protected abstract void stopInternal() throws RuntimeException;
 

@@ -29,8 +29,8 @@ public abstract class VistaServerSupport extends VistaServiceSupport implements 
 
     private final CountDownLatch latch = new CountDownLatch(1);
     private AtomicBoolean completed = new AtomicBoolean();
-    private long duration = -1;
     private Thread shutdownHook;
+    private long duration = -1;
 
     @Override
     protected void startInternal() throws RuntimeException {
@@ -78,7 +78,11 @@ public abstract class VistaServerSupport extends VistaServiceSupport implements 
         }
     }
 
-    public void completed() {
+    protected void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    protected void completed() {
         completed.set(true);
         latch.countDown();
     }

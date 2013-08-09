@@ -18,11 +18,10 @@ package org.osehra.vista.camel.rpc.service;
 
 
 public interface VistaService {
-    enum STATE { IDLE, STARTING, ACTIVE, STOPPING };
 
     void start();
     void stop();
-    STATE getState();
+    boolean isActive();
 
 }
 
