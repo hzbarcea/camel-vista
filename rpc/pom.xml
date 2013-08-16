@@ -80,7 +80,7 @@
       <properties>
         <!-- Running Vista RPC server on custom port -->
         <target.main.class>org.osehra.vista.camel.rpc.service.VistaServer</target.main.class>
-        <target.main.args>9221</target.main.args>
+        <target.main.args>9220</target.main.args>
       </properties>
     </profile>
     <profile>

@@ -16,25 +16,52 @@
 
 package org.osehra.vista.camel.rpc.codec;
 
-import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelEvent;
 import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
-import org.jboss.netty.channel.SimpleChannelHandler;
+import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
+import org.osehra.vista.camel.rpc.RpcRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
-public class RpcServerHandler extends SimpleChannelHandler {
+public class RpcServerHandler extends SimpleChannelUpstreamHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(RpcServerHandler.class);
+
+    @Override
+    public void handleUpstream(ChannelHandlerContext ctx, ChannelEvent e) throws Exception {
+        if (e instanceof ChannelStateEvent) {
+            LOG.debug(e.toString());
+        }
+        super.handleUpstream(ctx, e);
+    }
+/*
+    @Override
+    public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+        LOG.debug("Channel {} connected", ctx.toString());
+        super.channelConnected(ctx, e);
+    }
+
+    @Override
+    public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+        LOG.debug("Channel {} disconnected", ctx.toString());
+        super.channelDisconnected(ctx, e);
+    }
+*/
+
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
+        if (e.getMessage() instanceof RpcRequest) {
+            // figure out what the reply should be for the given message
+        }
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
-        e.getCause().printStackTrace();
-            
-        Channel ch = e.getChannel();
-        ch.close();
+        LOG.warn("Unexpected exception from downstream", e.getCause());
+        e.getChannel().close();
     }
-
 }
 

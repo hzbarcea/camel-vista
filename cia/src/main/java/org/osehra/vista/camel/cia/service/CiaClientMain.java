@@ -53,7 +53,6 @@ public class CiaClientMain implements Runnable {
     public static void main(String... args) {
         // TODO: use configured defaults?
         if (args.length != 2) {
-            System.out.println("Usage: " + CiaClientMain.class.getSimpleName() + " <host> <port>");
             return;
         }
 
