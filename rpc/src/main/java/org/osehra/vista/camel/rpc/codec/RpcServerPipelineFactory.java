@@ -21,9 +21,11 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.logging.LoggingHandler;
 import org.jboss.netty.logging.InternalLogLevel;
+import org.osehra.vista.camel.rpc.VistaRuntime;
 
 
 public class RpcServerPipelineFactory implements ChannelPipelineFactory {
+    private VistaRuntime runtime;
 
     @Override
     public ChannelPipeline getPipeline() throws Exception {

@@ -14,32 +14,11 @@
  * limitations under the License.
  */
 
-package org.osehra.vista.camel.rpc.util;
+package org.osehra.vista.camel.rpc;
 
-import java.io.InputStream;
-import java.util.Scanner;
 
-/*
- * Parses an InputStream, splits it in lines that a parsed by a LineParser
- * 
- */
-public class TextParser {
-    private final LineParser parser;
+public interface VistaRuntime {
 
-    public TextParser(LineParser parser) {
-        this.parser = parser;
-    }
-
-    public void parse(InputStream in) throws Exception {
-        Scanner scanner = new Scanner(in);
-        try {
-            while (scanner.hasNextLine()) {
-                parser.parse(scanner.nextLine());
-            }
-        } finally {
-            scanner.close();
-        }
-    }
-
+    RpcResponse execute(RpcRequest request);
+    
 }
-

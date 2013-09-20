@@ -23,12 +23,18 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.osehra.vista.camel.rpc.RpcRequest;
+import org.osehra.vista.camel.rpc.VistaRuntime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 public class RpcServerHandler extends SimpleChannelUpstreamHandler {
     private static final Logger LOG = LoggerFactory.getLogger(RpcServerHandler.class);
+    private VistaRuntime runtime;
+
+    public void setRuntime(VistaRuntime runtime) {
+        this.runtime = runtime;
+    }
 
     @Override
     public void handleUpstream(ChannelHandlerContext ctx, ChannelEvent e) throws Exception {
@@ -53,8 +59,10 @@ public class RpcServerHandler extends SimpleChannelUpstreamHandler {
 
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
-        if (e.getMessage() instanceof RpcRequest) {
-            // figure out what the reply should be for the given message
+        Object request = e.getMessage();
+        if (request instanceof RpcRequest) {
+            LOG.info("RECEIVED request");
+            runtime.execute((RpcRequest) request);
         }
     }
 

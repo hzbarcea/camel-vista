@@ -46,16 +46,53 @@ public class NettyBufferParseTest {
             + "|00000040| 6f 72 67 66 04                                  |orgf.           |\n"
             + "+--------+-------------------------------------------------+----------------+\n";
 
-        NettyLogBuffer buffer = new NettyLogBuffer();
-        TextParser parser = new TextParser(new NettyLogLineParser(buffer));
-        parser.parse(new ByteArrayInputStream(content.getBytes()));
-        
-        Assert.assertEquals(69, buffer.getBuffer().length);
+        NettyLogLineParser logParser = new NettyLogLineParser();
+        new TextParser(logParser).parse(new ByteArrayInputStream(content.getBytes()));
+
+        Assert.assertEquals(1, logParser.getEntries().size());
+        byte[] buffer = logParser.getEntries().get(0);
+        Assert.assertEquals(69, buffer.length);
 
         DecoderEmbedder<RpcRequest> e = new DecoderEmbedder<RpcRequest>(new RpcRequestDecoder());
-        e.offer(ChannelBuffers.copiedBuffer(buffer.getBuffer()));
+        e.offer(ChannelBuffers.copiedBuffer(buffer));
         RpcRequest result = e.poll();
         Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void testParseMultipleEntries() throws Exception {
+        String content = ""
+            + "         +-------------------------------------------------+\n"
+            + "         |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f |\n"
+            + "+--------+-------------------------------------------------+----------------+\n"
+            + "|00000000| 5b 58 57 42 5d 31 30 33 30 34 0a 54 43 50 43 6f |[XWB]10304.TCPCo|\n"
+            + "|00000010| 6e 6e 65 63 74 35 30 30 31 33 31 39 32 2e 31 36 |nnect50013192.16|\n"
+            + "|00000020| 38 2e 31 2e 31 30 30 66 30 30 30 31 30 66 30 30 |8.1.100f00010f00|\n"
+            + "|00000030| 31 37 76 69 73 74 61 2e 65 78 61 6d 70 6c 65 2e |17vista.example.|\n"
+            + "|00000040| 6f 72 67 66 04                                  |orgf.           |\n"
+            + "+--------+-------------------------------------------------+----------------+\n"
+            + "\n"
+            + "         +-------------------------------------------------+\n"
+            + "         |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f |\n"
+            + "+--------+-------------------------------------------------+----------------+\n"
+            + "|00000000| 5b 58 57 42 5d 31 31 33 30 32 01 30 10 58 55 53 |[XWB]11302.0.XUS|\n"
+            + "|00000010| 20 53 49 47 4e 4f 4e 20 53 45 54 55 50 35 30 30 | SIGNON SETUP500|\n"
+            + "|00000020| 34 36 27 5b 4d 52 4d 31 4d 36 52 4d 74 31 36 2b |46'[MRM1M6RMt16+|\n"
+            + "|00000030| 2b 62 3e 31 52 4d 36 31 74 6d 36 74 6d 31 52 36 |+b>1RM61tm6tm1R6|\n"
+            + "|00000040| 4d 36 52 61 74 76 74 62 76 31 4d 52 6d 6d 31 24 |M6Ratvtbv1MRmm1$|\n"
+            + "|00000050| 66 04                                           |f.              |\n"
+            + "+--------+-------------------------------------------------+----------------+\n";
+
+        NettyLogLineParser logParser = new NettyLogLineParser();
+        new TextParser(logParser).parse(new ByteArrayInputStream(content.getBytes()));
+
+        Assert.assertEquals(2, logParser.getEntries().size());
+        for (byte[] entry : logParser.getEntries()) {
+            DecoderEmbedder<RpcRequest> e = new DecoderEmbedder<RpcRequest>(new RpcRequestDecoder());
+            e.offer(ChannelBuffers.copiedBuffer(entry));
+            RpcRequest result = e.poll();
+            Assert.assertNotNull(result);
+        }
     }
 
     @Test
@@ -64,21 +101,18 @@ public class NettyBufferParseTest {
             + "         +-------------------------------------------------+\n"
             + "         |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f |\n"
             + "+--------+-------------------------------------------------+----------------+\n"
-            + "|00000000| 00 00 45 43 32 41 4d 41 5a 2d 39 36 54 51 32 50 |..EC2AMAZ-96TQ2P|\n"
-            + "|00000010| 4b 0d 0a 52 4f 55 0d 0a 43 50 4d 0d 0a 2f 2f 2e |K..ROU..CPM..//.|\n"
-            + "|00000020| 2f 6e 75 6c 3a 34 36 34 30 0d 0a 35 0d 0a 30 0d |/nul:4640..5..0.|\n"
-            + "|00000030| 0a 55 56 41 2e 44 4f 4d 41 49 4e 2e 47 4f 56 0d |.UVA.DOMAIN.GOV.|\n"
-            + "|00000040| 0a 30 0d 0a 04                                  |.0...           |\n"
+            + "|00000000| 00 00 61 63 63 65 70 74 04                      |..accept.       |\n"
             + "+--------+-------------------------------------------------+----------------+\n";
 
-        NettyLogBuffer buffer = new NettyLogBuffer();
-        TextParser parser = new TextParser(new NettyLogLineParser(buffer));
-        parser.parse(new ByteArrayInputStream(content.getBytes()));
-            
-        Assert.assertEquals(69, buffer.getBuffer().length);
+        NettyLogLineParser logParser = new NettyLogLineParser();
+        new TextParser(logParser).parse(new ByteArrayInputStream(content.getBytes()));
+
+        Assert.assertEquals(1, logParser.getEntries().size());
+        byte[] buffer = logParser.getEntries().get(0);
+        Assert.assertEquals(9, buffer.length);
 
         DecoderEmbedder<RpcResponse> e = new DecoderEmbedder<RpcResponse>(new RpcResponseDecoder());
-        e.offer(ChannelBuffers.copiedBuffer(buffer.getBuffer()));
+        e.offer(ChannelBuffers.copiedBuffer(buffer));
         RpcResponse result = e.poll();
         Assert.assertNotNull(result);
     }

@@ -16,6 +16,9 @@
 
 package org.osehra.vista.camel.rpc.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /*
  * Parses log 
@@ -34,10 +37,12 @@ package org.osehra.vista.camel.rpc.util;
  */
 public class NettyLogLineParser implements LineParser {
     private boolean parsing = false;
-    private final LineParser lineParser; 
-    
-    public NettyLogLineParser(NettyLogBuffer buffer) {
-        lineParser = new NettyHexDumpParser(buffer);
+    private final List<byte[]> entries = new ArrayList<byte[]>();
+    private NettyLogBuffer buffer;
+    private LineParser lineParser;
+
+    public List<byte[]> getEntries() {
+        return entries;
     }
 
     public void parse(String line) throws Exception {
@@ -48,6 +53,13 @@ public class NettyLogLineParser implements LineParser {
         case '+':
             // separator line
             parsing = !parsing;
+            if (parsing) {
+                buffer = new NettyLogBuffer();
+                lineParser = new NettyHexDumpParser(buffer);
+            } else {
+                // no need to set the buffer and lineParser to null, it'll happen at next pass
+                entries.add(buffer.getBuffer());
+            }
             break;
         case '|':
             if (!parsing) {

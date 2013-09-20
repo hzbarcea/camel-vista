@@ -57,7 +57,7 @@
    
   <modules>
     <module>rpc</module>
-    <module>cia</module>
+    <!-- module>cia</module -->
     <module>camel</module>
     <module>features</module>
     <module>war</module>
