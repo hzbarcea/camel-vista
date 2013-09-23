@@ -29,12 +29,14 @@ public class RpcServerPipelineFactory implements ChannelPipelineFactory {
 
     @Override
     public ChannelPipeline getPipeline() throws Exception {
+        RpcServerHandler handler = new RpcServerHandler();
+        handler.setRuntime(runtime);
 
         ChannelPipeline pipeline = Channels.pipeline();
         pipeline.addLast("logger", new LoggingHandler(InternalLogLevel.DEBUG));
         pipeline.addLast("decoder", new RpcRequestDecoder());
         pipeline.addLast("encoder", new RpcRequestEncoder());
-        pipeline.addLast("handler", new RpcServerHandler());
+        pipeline.addLast("handler", handler);
 
         return pipeline;
     }

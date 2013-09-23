@@ -27,7 +27,6 @@ import org.osehra.vista.camel.rpc.RpcRequest;
 import org.osehra.vista.camel.rpc.RpcResponse;
 import org.osehra.vista.camel.rpc.VistaRuntime;
 import org.osehra.vista.camel.rpc.codec.RpcResponseDecoder;
-import org.osehra.vista.camel.rpc.service.VistaServiceTestSupport;
 import org.osehra.vista.camel.rpc.util.NettyLogLineParser;
 import org.osehra.vista.camel.rpc.util.TextParser;
 import org.slf4j.Logger;
@@ -35,7 +34,7 @@ import org.slf4j.LoggerFactory;
 
 
 public class RecordPlayerRuntime implements VistaRuntime {
-    private final static Logger LOG = LoggerFactory.getLogger(VistaServiceTestSupport.class);
+    private final static Logger LOG = LoggerFactory.getLogger(RecordPlayerRuntime.class);
     private AtomicInteger index = new AtomicInteger(-1);
     private List<RpcResponse> responses;
 

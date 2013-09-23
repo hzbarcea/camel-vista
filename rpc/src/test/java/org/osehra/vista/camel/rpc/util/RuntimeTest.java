@@ -18,6 +18,7 @@ package org.osehra.vista.camel.rpc.util;
 
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -65,20 +66,23 @@ public class RuntimeTest {
                 + "|000000d0| 52 49 54 59 20 6d 61 69 6c 21 0d 0a 04          |RITY mail!...   |\n"
                 + "+--------+-------------------------------------------------+----------------+\n";
 
-        RecordPlayerRuntime runtime = new RecordPlayerRuntime(new ByteArrayInputStream(content.getBytes()));
-        Assert.assertEquals(3, runtime.getResponses().size());
-
-        RpcRequest dummy = RpcCommandsSupport.connect("192.168.1.100", "vista.example.org");
-        for (int i = 0; i < runtime.getResponses().size(); i++) {
-            // consume responses
-            runtime.execute(dummy);
-        }
-        Assert.assertNull(runtime.execute(dummy));
-
+        playDummyRequest(3, new RecordPlayerRuntime(new ByteArrayInputStream(content.getBytes())));
     }
 
     @Test
     public void testRecordPlayerFileInput() throws Exception {
+        playDummyRequest(3, new RecordPlayerRuntime(new FileInputStream("src/test/resources/RuntimeTest-recordPlayer.txt")));
+    }
+
+    protected void playDummyRequest(int count, RecordPlayerRuntime runtime) {
+        RpcRequest dummy = RpcCommandsSupport.connect("192.168.1.100", "vista.example.org");
+
+        Assert.assertEquals(count, runtime.getResponses().size());
+        for (int i = 0; i < runtime.getResponses().size(); i++) {
+            Assert.assertNotNull(runtime.execute(dummy));   // consume responses
+        }
+        Assert.assertNull(runtime.execute(dummy));
+
     }
 
 }
