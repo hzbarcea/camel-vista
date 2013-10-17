@@ -27,7 +27,7 @@ import org.jboss.netty.logging.InternalLoggerFactory;
 import org.jboss.netty.logging.Slf4JLoggerFactory;
 import org.osehra.vista.camel.rpc.RpcConstants;
 import org.osehra.vista.camel.rpc.codec.RpcClientPipelineFactory;
-import org.osehra.vista.camel.rpc.codec.RpcCommandsSupport;
+import org.osehra.vista.camel.rpc.util.RpcCommandsSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

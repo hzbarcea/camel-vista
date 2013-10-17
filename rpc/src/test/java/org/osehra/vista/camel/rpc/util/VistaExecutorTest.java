@@ -23,7 +23,7 @@ import java.io.FileInputStream;
 import org.junit.Assert;
 import org.junit.Test;
 import org.osehra.vista.camel.rpc.RpcRequest;
-import org.osehra.vista.camel.rpc.codec.RpcCommandsSupport;
+import org.osehra.vista.camel.rpc.util.RpcCommandsSupport;
 
 
 public class VistaExecutorTest {

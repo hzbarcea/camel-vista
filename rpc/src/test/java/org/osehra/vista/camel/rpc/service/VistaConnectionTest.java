@@ -22,7 +22,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.osehra.vista.camel.rpc.RpcConstants;
-import org.osehra.vista.camel.rpc.codec.RpcCommandsSupport;
+import org.osehra.vista.camel.rpc.util.RpcCommandsSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

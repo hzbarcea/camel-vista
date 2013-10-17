@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.osehra.vista.camel.rpc.codec;
+package org.osehra.vista.camel.rpc.util;
 
 import org.osehra.vista.camel.rpc.EmptyParameter;
 import org.osehra.vista.camel.rpc.GlobalParameter;
