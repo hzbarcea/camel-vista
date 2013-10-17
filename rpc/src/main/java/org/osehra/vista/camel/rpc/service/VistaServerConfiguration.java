@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.osehra.vista.camel.rpc.RpcConstants;
+
 
 public class VistaServerConfiguration {
 
@@ -33,10 +35,10 @@ public class VistaServerConfiguration {
     public static final String KEY_PORT = "vista.port";
     public static final String KEY_ACCESS = "vista.accesscode";
     public static final String KEY_VERIFY = "vista.verifycode";
-    public static final String DEF_HOST = "localhost";
-    public static final String DEF_PORT = "9220";
+    public static final String DEF_HOST = RpcConstants.DEFAULT_HOST;
+    public static final String DEF_PORT = Integer.toString(RpcConstants.DEFAULT_PORT);
     public static final String DEF_ACCESS = "secret";
-    public static final String DEF_VERIFY = "secret.";
+    public static final String DEF_VERIFY = "1Secret.";
     
     public static void loadConfiguration(VistaServerConfiguration cfg, InputStream is) {
         if (is != null) {

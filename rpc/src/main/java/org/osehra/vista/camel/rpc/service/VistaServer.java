@@ -27,7 +27,7 @@ import org.osehra.vista.camel.rpc.codec.RpcServerPipelineFactory;
 
 
 public class VistaServer extends VistaServerSupport {
-    public static final int DEFAULT_PORT = 9220;
+    public static final int DEFAULT_PORT = 9200;
     private int port = DEFAULT_PORT;
 
     private static String usage() {

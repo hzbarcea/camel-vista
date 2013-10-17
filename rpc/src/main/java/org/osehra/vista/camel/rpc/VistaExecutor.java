@@ -17,7 +17,7 @@
 package org.osehra.vista.camel.rpc;
 
 
-public interface VistaRuntime {
+public interface VistaExecutor {
 
     RpcResponse execute(RpcRequest request);
     

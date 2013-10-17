@@ -46,6 +46,24 @@ public class NettyBufferParseTest {
             + "|00000040| 6f 72 67 66 04                                  |orgf.           |\n"
             + "+--------+-------------------------------------------------+----------------+\n";
 
+        commonRequestParseTest(content);
+    }
+
+    @Test
+    public void testParseRequestNoHeader() throws Exception {
+        String content = ""
+            + "+--------+-------------------------------------------------+----------------+\n"
+            + "|00000000| 5b 58 57 42 5d 31 30 33 30 34 0a 54 43 50 43 6f |[XWB]10304.TCPCo|\n"
+            + "|00000010| 6e 6e 65 63 74 35 30 30 31 33 31 39 32 2e 31 36 |nnect50013192.16|\n"
+            + "|00000020| 38 2e 31 2e 31 30 30 66 30 30 30 31 30 66 30 30 |8.1.100f00010f00|\n"
+            + "|00000030| 31 37 76 69 73 74 61 2e 65 78 61 6d 70 6c 65 2e |17vista.example.|\n"
+            + "|00000040| 6f 72 67 66 04                                  |orgf.           |\n"
+            + "+--------+-------------------------------------------------+----------------+\n";
+
+        commonRequestParseTest(content);
+    }
+
+    public void commonRequestParseTest(String content) throws Exception {
         NettyLogLineParser logParser = new NettyLogLineParser();
         new TextParser(logParser).parse(new ByteArrayInputStream(content.getBytes()));
 

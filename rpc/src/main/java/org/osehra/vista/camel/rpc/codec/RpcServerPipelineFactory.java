@@ -21,16 +21,16 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.logging.LoggingHandler;
 import org.jboss.netty.logging.InternalLogLevel;
-import org.osehra.vista.camel.rpc.VistaRuntime;
+import org.osehra.vista.camel.rpc.VistaExecutor;
 
 
 public class RpcServerPipelineFactory implements ChannelPipelineFactory {
-    private VistaRuntime runtime;
+    private VistaExecutor executor;
 
     @Override
     public ChannelPipeline getPipeline() throws Exception {
         RpcServerHandler handler = new RpcServerHandler();
-        handler.setRuntime(runtime);
+        handler.setExecutor(executor);
 
         ChannelPipeline pipeline = Channels.pipeline();
         pipeline.addLast("logger", new LoggingHandler(InternalLogLevel.DEBUG));

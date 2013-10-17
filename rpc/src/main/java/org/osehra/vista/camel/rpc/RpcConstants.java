@@ -42,7 +42,7 @@ public final class RpcConstants {
     public static final String RPC_DEFAULT_CODE = "11302";
     public static final String RPC_VERSION = "2.0";
     public static final String DEFAULT_HOST = "localhost";
-    public static final int DEFAULT_PORT = 9220;
+    public static final int DEFAULT_PORT = 9200;
 
     private RpcConstants() {
         // Utility class

@@ -25,7 +25,7 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.embedder.DecoderEmbedder;
 import org.osehra.vista.camel.rpc.RpcRequest;
 import org.osehra.vista.camel.rpc.RpcResponse;
-import org.osehra.vista.camel.rpc.VistaRuntime;
+import org.osehra.vista.camel.rpc.VistaExecutor;
 import org.osehra.vista.camel.rpc.codec.RpcResponseDecoder;
 import org.osehra.vista.camel.rpc.util.NettyLogLineParser;
 import org.osehra.vista.camel.rpc.util.TextParser;
@@ -33,12 +33,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class RecordPlayerRuntime implements VistaRuntime {
-    private final static Logger LOG = LoggerFactory.getLogger(RecordPlayerRuntime.class);
+public class RecordPlayerExecutor implements VistaExecutor {
+    private final static Logger LOG = LoggerFactory.getLogger(RecordPlayerExecutor.class);
     private AtomicInteger index = new AtomicInteger(-1);
     private List<RpcResponse> responses;
 
-    public RecordPlayerRuntime(InputStream input) {
+    public RecordPlayerExecutor(InputStream input) {
         NettyLogLineParser logParser = new NettyLogLineParser();
         try {
             new TextParser(logParser).parse(input);

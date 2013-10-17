@@ -76,13 +76,11 @@ public class RpcRequestDecoder extends ReplayingDecoder<RpcRequestDecoder.State>
             namespace = buffer.readBytes(len).toString(RpcCodecUtils.DEF_CHARSET);
             buffer.skipBytes(1);
 
-            LOG.debug("RPC.decode: namespace={}", namespace);
             checkpoint(State.READ_CODE);
         }
         case READ_CODE: {
             // Code has a fixed size of 5 chars
             code = buffer.readBytes(RpcConstants.CODE_LEN).toString(RpcCodecUtils.DEF_CHARSET);
-            LOG.debug("RPC.decode: code={}", code);
             checkpoint(State.READ_NAME);
         }
         case READ_NAME: {
