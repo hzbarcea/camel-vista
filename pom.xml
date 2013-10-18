@@ -24,7 +24,7 @@
 
   <groupId>org.osehra.vista.camel</groupId>
   <artifactId>parent</artifactId>
-  <version>0.5</version>
+  <version>0.6-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>VistA :: Camel</name>
   <description>VistA integration components via Apache Camel</description>
@@ -58,7 +58,7 @@
   <modules>
     <module>rpc</module>
     <module>camel</module>
-    <module>features</module>
+    <module>osgi</module>
     <module>war</module>
   </modules>
 
