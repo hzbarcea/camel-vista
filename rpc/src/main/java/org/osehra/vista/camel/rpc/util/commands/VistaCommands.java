@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package org.osehra.vista.camel.rpc.util;
+package org.osehra.vista.camel.rpc.util.commands;
 
-import org.osehra.vista.camel.rpc.EmptyParameter;
-import org.osehra.vista.camel.rpc.GlobalParameter;
-import org.osehra.vista.camel.rpc.LiteralParameter;
-import org.osehra.vista.camel.rpc.Parameter;
-import org.osehra.vista.camel.rpc.ReferenceParameter;
-import org.osehra.vista.camel.rpc.RpcConstants;
 import org.osehra.vista.camel.rpc.RpcRequest;
+import org.osehra.vista.camel.rpc.util.RpcCommandLibrary;
 
 
-public class RpcCommandsSupport {
+public class VistaCommands extends RpcCommandLibrary {
 
-    public static RpcRequest connect() {
-        // TODO: use computed vs hardcoded defaults
-        return connect("120.0.0.1", "localhost");
+    public static VistaCommands vista() {
+        return new VistaCommands();
     }
-    public static RpcRequest connect(String ipaddress, String hostname) {
+
+    public RpcRequest connect(String ipaddress, String hostname) {
         return request()
             .code("10304")
             .version(null)
@@ -40,12 +35,13 @@ public class RpcCommandsSupport {
             .parameter(literal("0"))
             .parameter(literal(hostname));
     }
-    public static RpcRequest disconnect() {
+    public RpcRequest disconnect() {
         return request()
             .code("10304")
             .version(null)
             .name("#BYE#");    
     }
+
     public static RpcRequest login(String access, String verify) {
         return request()
             .name("XUS AV CODE")
@@ -60,33 +56,6 @@ public class RpcCommandsSupport {
         return request()
             .name("XWB CREATE CONTEXT")
             .parameter(literal(one(context)));
-    }
-
-    public static RpcRequest request() {
-        return new RpcRequest()
-            .namespace(RpcConstants.RPC_DEFAULT_NS)
-            .code(RpcConstants.RPC_DEFAULT_CODE)
-            .version(RpcConstants.RPC_VERSION);
-    }
-
-    public static Parameter literal(String value) {
-        return new LiteralParameter(value);
-    }
-    public static Parameter ref(String value) {
-        return new ReferenceParameter(value);
-    }
-    public static Parameter global(String key, String value) {
-        return new GlobalParameter(key, value);
-    }
-    public static Parameter empty() {
-        return new EmptyParameter();
-    }
-    public static String one(String param) {
-        return new StringBuffer().append("1").append(param).append("1").toString();
-    }
-
-    protected RpcCommandsSupport() {
-        // TODO: allow inheritance for convenience or enforce static utility class?
     }
 
 }

@@ -90,6 +90,7 @@ public abstract class VistaServerSupport extends VistaServiceSupport implements 
     protected void completed() {
         completed.set(true);
         latch.countDown();
+        // TODO: wait for complete stop to avoid exceptions due to port in use on restart?
     }
 
     /**

@@ -27,9 +27,10 @@ import org.osehra.vista.camel.rpc.RpcConstants;
 import org.osehra.vista.camel.rpc.RpcResponse;
 import org.osehra.vista.camel.rpc.VistaExecutor;
 import org.osehra.vista.camel.rpc.util.RecordPlayerExecutor;
-import org.osehra.vista.camel.rpc.util.RpcCommandsSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.osehra.vista.camel.rpc.util.commands.VistaCommands.vista;
 
 
 public class VistaConnectionTest extends VistaServiceTestSupport {
@@ -48,12 +49,16 @@ public class VistaConnectionTest extends VistaServiceTestSupport {
     @Before
     public void setupClient() {
         LOG.debug("Creating VistA test client...");
-        client = createClientChannel("localhost", RpcConstants.DEFAULT_PORT);
+        // client = createClientChannel(RpcConstants.DEFAULT_HOST, RpcConstants.DEFAULT_PORT);
+        client = createClientChannel("10.1.202.203", 9430);
     }
 
     @Test
     public void testConnect() throws Exception {
-        RpcResponse reply = call(client, RpcCommandsSupport.connect("192.168.1.100", "vista.example.org"));
+        RpcResponse reply = call(client, vista().connect("192.168.1.100", "vista.example.org"));
+        reply = call(client, vista().signonSetup());
+        reply = call(client, vista().login("SM1234", "SM12345!!"));
+        reply = call(client, vista().context("OR CPRS GUI CHART"));
         Assert.assertNotNull(reply);
     }
 

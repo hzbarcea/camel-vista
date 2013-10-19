@@ -27,9 +27,10 @@ import org.jboss.netty.logging.InternalLoggerFactory;
 import org.jboss.netty.logging.Slf4JLoggerFactory;
 import org.osehra.vista.camel.rpc.RpcConstants;
 import org.osehra.vista.camel.rpc.codec.RpcClientPipelineFactory;
-import org.osehra.vista.camel.rpc.util.RpcCommandsSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.osehra.vista.camel.rpc.util.commands.VistaCommands.vista;
 
 
 public class VistaClientMain implements Runnable {
@@ -74,7 +75,7 @@ public class VistaClientMain implements Runnable {
             ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(host, port));
             Channel channel = connectFuture.awaitUninterruptibly().getChannel();
 
-            response = channel.write(RpcCommandsSupport.connect("192.168.1.100", "vista.example.org"));
+            response = channel.write(vista().connect("192.168.1.100", "vista.example.org"));
             response.awaitUninterruptibly();
             Thread.sleep(3000);
 /*
@@ -97,7 +98,7 @@ public class VistaClientMain implements Runnable {
             response.awaitUninterruptibly();
             Thread.sleep(5000);
 */
-            response = channel.write(RpcCommandsSupport.disconnect());
+            response = channel.write(vista().disconnect());
             response.awaitUninterruptibly();
             Thread.sleep(1000);
 

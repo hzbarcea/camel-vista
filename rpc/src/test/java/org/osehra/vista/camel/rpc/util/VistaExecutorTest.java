@@ -23,7 +23,8 @@ import java.io.FileInputStream;
 import org.junit.Assert;
 import org.junit.Test;
 import org.osehra.vista.camel.rpc.RpcRequest;
-import org.osehra.vista.camel.rpc.util.RpcCommandsSupport;
+
+import static org.osehra.vista.camel.rpc.util.commands.VistaCommands.vista;
 
 
 public class VistaExecutorTest {
@@ -75,7 +76,7 @@ public class VistaExecutorTest {
     }
 
     protected void playDummyRequest(int count, RecordPlayerExecutor runtime) {
-        RpcRequest dummy = RpcCommandsSupport.connect("192.168.1.100", "vista.example.org");
+        RpcRequest dummy = vista().connect("192.168.1.100", "vista.example.org");
 
         Assert.assertEquals(count, runtime.getResponses().size());
         for (int i = 0; i < runtime.getResponses().size(); i++) {
