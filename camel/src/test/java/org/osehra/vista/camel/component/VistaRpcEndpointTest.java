@@ -16,38 +16,28 @@
 
 package org.osehra.vista.camel.component;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
+import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.component.netty.NettyEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
-import org.osehra.vista.camel.rpc.RpcRequest;
 import org.osehra.vista.camel.rpc.RpcResponse;
-import org.osehra.vista.camel.rpc.util.RpcCommandsSupport;
 
 
 public class VistaRpcEndpointTest extends CamelTestSupport {
 
     @Test
-    public void testVistaConsumer() throws Exception {
-        MockEndpoint mock = getMockEndpoint("mock:result");
-        // mock.expectedMessageCount(1);
-        // mock.expectedBodiesReceived("");
-
-        RpcRequest request = RpcCommandsSupport.connect();
-        // RpcResponse reply = template.requestBody("vista://localhost:9200", request, RpcResponse.class);
-        // assertNotNull(reply);
+    public void testVistaEndpointType() throws Exception {
+        Endpoint vista = this.getMandatoryEndpoint("vista://localhost:9200");
+        assertTrue(vista instanceof NettyEndpoint);
     }
 
     @Override
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() {
-                // from("netty:tcp://0.0.0.0:9200?serverPipelineFactory=#rpc-in&amp;sync=true").to("log:FOO").to("mock:result");
                 from("vista://localhost:9200").process(new Processor() {
                     public void process(Exchange exchange) throws Exception {
                         exchange.getOut().setBody(new RpcResponse());

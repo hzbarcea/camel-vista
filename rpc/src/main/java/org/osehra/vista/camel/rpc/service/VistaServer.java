@@ -20,15 +20,18 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
 import org.jboss.netty.bootstrap.ServerBootstrap;
+import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.jboss.netty.logging.InternalLoggerFactory;
 import org.jboss.netty.logging.Slf4JLoggerFactory;
+import org.osehra.vista.camel.rpc.VistaExecutor;
 import org.osehra.vista.camel.rpc.codec.RpcServerPipelineFactory;
 
 
-public class VistaServer extends VistaServerSupport {
+public final class VistaServer extends VistaServerSupport {
     public static final int DEFAULT_PORT = 9200;
     private int port = DEFAULT_PORT;
+    private VistaExecutor executor;
 
     private static String usage() {
         return "usage: java VistaServer [port]\n";
@@ -54,7 +57,13 @@ public class VistaServer extends VistaServerSupport {
             }
             port = p;
         }
+        // TODO: add options for VistaExecutor flavors and configuration
         new VistaServer().setPort(port).run();
+    }
+
+    public VistaServer setExecutor(VistaExecutor executor) {
+        this.executor = executor;
+        return this;
     }
 
     @Override
@@ -82,7 +91,7 @@ public class VistaServer extends VistaServerSupport {
                 Executors.newCachedThreadPool(),
                 Executors.newCachedThreadPool()));
 
-        bootstrap.setPipelineFactory(new RpcServerPipelineFactory());
+        bootstrap.setPipelineFactory(createServerPipelineFactory());
         bootstrap.setOption("child.tcpNoDelay", true);
         bootstrap.setOption("child.keepAlive", true);
 
@@ -91,4 +100,8 @@ public class VistaServer extends VistaServerSupport {
         bootstrap.bind(new InetSocketAddress(port));
     }
 
+    private ChannelPipelineFactory createServerPipelineFactory() {
+        // TODO: maybe set other options (e.g logging)
+        return new RpcServerPipelineFactory(executor);
+    }
 }

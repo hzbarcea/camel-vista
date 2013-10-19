@@ -28,6 +28,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.osehra.vista.camel.rpc.RpcRequest;
 import org.osehra.vista.camel.rpc.RpcResponse;
+import org.osehra.vista.camel.rpc.VistaExecutor;
+import org.osehra.vista.camel.rpc.codec.RpcClientHandler;
 import org.osehra.vista.camel.rpc.codec.RpcClientPipelineFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,8 +51,10 @@ public abstract class VistaServiceTestSupport {
         server.completed();
     }
 
+    protected abstract VistaExecutor getExecutor();
+
     protected VistaServer createServer(int port) {
-        return new VistaServer().setPort(port);
+        return new VistaServer().setPort(port).setExecutor(getExecutor());
     }
 
     protected void runServer(final VistaServer server) {
@@ -75,10 +79,11 @@ public abstract class VistaServiceTestSupport {
             .awaitUninterruptibly().getChannel();
     }
     
-    protected RpcResponse call(Channel channel, RpcRequest request) {
+    protected RpcResponse call(Channel channel, RpcRequest request) throws Exception {
         ChannelFuture response = channel.write(request);
-        response.awaitUninterruptibly();
-        return null;
+        Channel ch = response.awaitUninterruptibly().getChannel();
+        RpcClientHandler handler= ch.getPipeline().get(RpcClientHandler.class);
+        return handler.getReplies().take();
     }
 }
 

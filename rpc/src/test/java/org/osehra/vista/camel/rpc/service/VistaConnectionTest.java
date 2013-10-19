@@ -16,12 +16,17 @@
 
 package org.osehra.vista.camel.rpc.service;
 
+import java.io.ByteArrayInputStream;
+
 import org.jboss.netty.channel.Channel;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.osehra.vista.camel.rpc.RpcConstants;
+import org.osehra.vista.camel.rpc.RpcResponse;
+import org.osehra.vista.camel.rpc.VistaExecutor;
+import org.osehra.vista.camel.rpc.util.RecordPlayerExecutor;
 import org.osehra.vista.camel.rpc.util.RpcCommandsSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +36,15 @@ public class VistaConnectionTest extends VistaServiceTestSupport {
     protected final static Logger LOG = LoggerFactory.getLogger(VistaConnectionTest.class);
     protected Channel client;
 
+    @Override
+    protected VistaExecutor getExecutor() {
+        String content = ""
+                + "+--------+-------------------------------------------------+----------------+\n"
+                + "|00000000| 00 00 61 63 63 65 70 74 04                      |..accept.       |\n"
+                + "+--------+-------------------------------------------------+----------------+\n";
+        return new RecordPlayerExecutor(new ByteArrayInputStream(content.getBytes()));
+    }
+
     @Before
     public void setupClient() {
         LOG.debug("Creating VistA test client...");
@@ -39,9 +53,8 @@ public class VistaConnectionTest extends VistaServiceTestSupport {
 
     @Test
     public void testConnect() throws Exception {
-        // call(client, RpcCommandsSupport.connect("192.168.1.100", "vista.example.org"));
-
-        Assert.assertTrue(true);
+        RpcResponse reply = call(client, RpcCommandsSupport.connect("192.168.1.100", "vista.example.org"));
+        Assert.assertNotNull(reply);
     }
 
 }

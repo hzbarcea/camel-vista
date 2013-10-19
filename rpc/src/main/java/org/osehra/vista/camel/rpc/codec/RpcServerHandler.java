@@ -23,6 +23,7 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.osehra.vista.camel.rpc.RpcRequest;
+import org.osehra.vista.camel.rpc.RpcResponse;
 import org.osehra.vista.camel.rpc.VistaExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +63,8 @@ public class RpcServerHandler extends SimpleChannelUpstreamHandler {
         Object request = e.getMessage();
         if (request instanceof RpcRequest) {
             LOG.info("RECEIVED request");
-            executor.execute((RpcRequest) request);
+            RpcResponse reply = executor.execute((RpcRequest) request);
+            e.getChannel().write(reply);
         }
     }
 

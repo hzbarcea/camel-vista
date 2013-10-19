@@ -16,6 +16,10 @@
 
 package org.osehra.vista.camel.rpc.codec;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelEvent;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
@@ -23,12 +27,20 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
+import org.osehra.vista.camel.rpc.RpcResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 public class RpcClientHandler extends SimpleChannelUpstreamHandler {
     private final static Logger LOG = LoggerFactory.getLogger(RpcClientHandler.class);
+
+    private volatile Channel channel;
+    private final BlockingQueue<RpcResponse> replies = new LinkedBlockingQueue<RpcResponse>();
+    
+    public BlockingQueue<RpcResponse> getReplies() {
+        return replies;
+    }
 
     @Override
     public void handleUpstream(ChannelHandlerContext ctx, ChannelEvent e) throws Exception {
@@ -44,6 +56,14 @@ public class RpcClientHandler extends SimpleChannelUpstreamHandler {
     }
 
     @Override
+    public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+        LOG.info("Channel open");
+        channel = e.getChannel();
+        super.channelOpen(ctx, e);
+    }
+
+
+    @Override
     public void messageReceived(ChannelHandlerContext ctx, final MessageEvent e) {
         LOG.info("message received '{}'", e.getMessage());
         /*
@@ -54,6 +74,7 @@ public class RpcClientHandler extends SimpleChannelUpstreamHandler {
             }
         });
         */
+        replies.offer((RpcResponse) e.getMessage());
     }
     
     @Override

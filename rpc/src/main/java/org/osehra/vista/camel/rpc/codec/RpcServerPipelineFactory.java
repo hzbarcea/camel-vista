@@ -26,6 +26,10 @@ import org.osehra.vista.camel.rpc.VistaExecutor;
 
 public class RpcServerPipelineFactory implements ChannelPipelineFactory {
     private VistaExecutor executor;
+    
+    public RpcServerPipelineFactory(VistaExecutor executor) {
+        this.executor = executor;
+    }
 
     @Override
     public ChannelPipeline getPipeline() throws Exception {
