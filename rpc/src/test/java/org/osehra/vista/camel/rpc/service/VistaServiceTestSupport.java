@@ -26,6 +26,7 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.junit.After;
 import org.junit.Before;
+import org.osehra.vista.camel.rpc.RpcConstants;
 import org.osehra.vista.camel.rpc.RpcRequest;
 import org.osehra.vista.camel.rpc.RpcResponse;
 import org.osehra.vista.camel.rpc.VistaExecutor;
@@ -38,6 +39,7 @@ public abstract class VistaServiceTestSupport {
     protected final static Logger LOG = LoggerFactory.getLogger(VistaServiceTestSupport.class);
     protected int port = VistaServer.DEFAULT_PORT;
     protected VistaServer server;
+    protected Channel client;
 
     @Before
     public void setUp() {
@@ -67,6 +69,10 @@ public abstract class VistaServiceTestSupport {
         t.start();
     }
 
+    protected void createClient() {
+        client = createClientChannel(RpcConstants.DEFAULT_HOST, RpcConstants.DEFAULT_PORT);
+    }
+
     protected Channel createClientChannel(String host, int port) {
         // Configure the client.
         ClientBootstrap bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(
@@ -78,7 +84,11 @@ public abstract class VistaServiceTestSupport {
         return bootstrap.connect(new InetSocketAddress(host, port))
             .awaitUninterruptibly().getChannel();
     }
-    
+
+    protected RpcResponse call(RpcRequest request) throws Exception {
+        return call(client, request);
+    }
+
     protected RpcResponse call(Channel channel, RpcRequest request) throws Exception {
         ChannelFuture response = channel.write(request);
         Channel ch = response.awaitUninterruptibly().getChannel();

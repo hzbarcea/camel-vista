@@ -42,17 +42,17 @@ public class VistaCommands extends RpcCommandLibrary {
             .name("#BYE#");    
     }
 
-    public static RpcRequest login(String access, String verify) {
+    public RpcRequest login(String access, String verify) {
         return request()
             .name("XUS AV CODE")
             .parameter(literal(one(new StringBuffer()
                 .append(access).append(";").append(verify).toString())));
     }
-    public static RpcRequest signonSetup() {
+    public RpcRequest signonSetup() {
         return request()
             .name("XUS SIGNON SETUP");
     }
-    public static RpcRequest context(String context) {
+    public RpcRequest context(String context) {
         return request()
             .name("XWB CREATE CONTEXT")
             .parameter(literal(one(context)));
